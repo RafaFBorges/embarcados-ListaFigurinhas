@@ -1,24 +1,26 @@
 import React, { useEffect } from "react";
 import { Camera } from "expo-camera";
 import { View, Text } from "react-native";
+import PrimaryButton from "../components/button/PrimaryButton";
 
-function PermissionView({ hasPermission, setHasPermission }) {
+function PermissionView({ setHasPermission }) {
   useEffect(() => {
     (async () => {
-      const { status } = await Camera.requestCameraPermissionsAsync();
-      setHasPermission(status == "granted");
+      askPermission();
     })();
   }, []);
 
-  if (hasPermission == null) {
-    // tela de espera
-    return <View />;
-  }
+  const askPermission = async () => {
+    const { status } = await Camera.requestCameraPermissionsAsync();
+    setHasPermission(status == "granted");
+  };
 
-  if (hasPermission === false) {
-    // usuaria não permitiu
-    return <Text>Aceite utilizar a camera para utilizar o aplicativo</Text>;
-  }
+  return (
+    <View>
+      <Text>Aceite utilizar a camera para utilizar o aplicativo</Text>
+      <PrimaryButton action={askPermission}>Permitir</PrimaryButton>
+    </View>
+  );
 }
 
 export default PermissionView;

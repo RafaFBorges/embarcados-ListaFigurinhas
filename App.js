@@ -3,19 +3,16 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, SafeAreaView } from "react-native";
 
 import PermissionView from "./src/pages/PermissionView";
-import BackCamera from "./src/camera/BackCamera";
+import BackCamera from "./src/components/camera/BackCamera";
 
 function App() {
   const [hasPermission, setHasPermission] = useState(null);
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar style={{ backgroundColor: "#ffffff" }} />
+      <StatusBar backgroundColor="#ffffff" />
       {hasPermission == null || hasPermission == false ? (
-        <PermissionView
-          hasPermission={hasPermission}
-          setHasPermission={(value) => setHasPermission(value)}
-        />
+        <PermissionView setHasPermission={(value) => setHasPermission(value)} />
       ) : (
         <BackCamera />
       )}
