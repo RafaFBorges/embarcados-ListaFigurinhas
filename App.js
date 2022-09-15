@@ -1,33 +1,24 @@
-import React, { useState, useEffect } from "react";
-import { Camera } from "expo-camera";
+import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, SafeAreaView, View } from "react-native";
+import { StyleSheet, SafeAreaView } from "react-native";
 
-export default function App() {
-  const [cameraType, setCameraType] = useState(Camera.Constants.Type.back);
+import PermissionView from "./src/pages/PermissionView";
+import BackCamera from "./src/camera/BackCamera";
+
+function App() {
   const [hasPermission, setHasPermission] = useState(null);
-
-  useEffect(() => {
-    (async () => {
-      const { status } = await Camera.requestCameraPermissionsAsync();
-      setHasPermission(status == "granted");
-    })();
-  }, []);
-
-  if (hasPermission == null) {
-    // tela de espera
-    return <View />;
-  }
-
-  if (hasPermission === false) {
-    // usuaria não permitiu
-    return <Text>Aceite utilizar a camera para utilizar o aplicativo</Text>;
-  }
 
   return (
     <SafeAreaView style={styles.container}>
-      <Camera style={{ flex: 1 }} type={cameraType} />
       <StatusBar style={{ backgroundColor: "#ffffff" }} />
+      {hasPermission == null || hasPermission == false ? (
+        <PermissionView
+          hasPermission={hasPermission}
+          setHasPermission={(value) => setHasPermission(value)}
+        />
+      ) : (
+        <BackCamera />
+      )}
     </SafeAreaView>
   );
 }
@@ -38,3 +29,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
+
+export default App;
