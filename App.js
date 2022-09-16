@@ -1,20 +1,25 @@
 import React, { useState } from "react";
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, SafeAreaView } from "react-native";
+import { StatusBar, StyleSheet, SafeAreaView } from "react-native";
 
 import PermissionView from "./src/pages/PermissionView";
-import CameraView from "./src/pages/CameraView";
+import PrincipalRoute from "./src/routes/PrincipalRoute";
 
 function App() {
   const [hasPermission, setHasPermission] = useState(null);
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar backgroundColor="#ffffff" />
+      <StatusBar
+        backgroundColor="rgba(0, 0, 0, 0.4)"
+        translucent={true}
+        animated={true}
+        barStyle="light-content"
+        hidden={false}
+      />
       {hasPermission == null || hasPermission == false ? (
         <PermissionView setHasPermission={(value) => setHasPermission(value)} />
       ) : (
-        <CameraView />
+        <PrincipalRoute />
       )}
     </SafeAreaView>
   );
