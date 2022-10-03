@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
@@ -7,19 +7,10 @@ import IconButton from "../components/button/IconButton";
 import BasicText from "../text/BasicText";
 import BasicTextInput from "../components/input/TextInput";
 import ContentCard from "../components/card/ContentCard";
+import { GlobalContext } from "../context/GlobalContext";
 
 function FigurinhasView() {
-  const [data, setData] = useState([
-    { key: "ABC1111", name: "Denis" },
-    { key: "BCV2222", name: "Pedro" },
-    { key: "FV3333", name: "Marcos" },
-    { key: "RT4444", name: "Ricardo" },
-    { key: "WE5555", name: "Maria" },
-    { key: "LO6666", name: "Suzane" },
-    { key: "XZ7777", name: "Caue" },
-    { key: "VG8888", name: "Bulba" },
-    { key: "HB9999", name: "Load" },
-  ]);
+  const { data } = useContext(GlobalContext);
   const [search, setSearch] = useState("");
   const [list, setList] = useState(data);
   const navigation = useNavigation();
@@ -27,7 +18,7 @@ function FigurinhasView() {
   useEffect(() => {
     setList(
       data.filter((item) => {
-        return item.name.includes(search) || item.name.includes(search);
+        return item.name.includes(search) || item.cod.includes(search);
       })
     );
   }, [search]);
@@ -53,7 +44,15 @@ function FigurinhasView() {
         data={list}
         numColumns={2}
         renderItem={({ item }) => {
-          return <ContentCard key={item.key} name={item.name} cod={item.key} />;
+          return (
+            <ContentCard
+              key={item.cod}
+              name={item.name}
+              cod={item.cod}
+              hasSticker={item.hasSticker}
+              image={item.image}
+            />
+          );
         }}
       />
     </View>

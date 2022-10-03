@@ -1,13 +1,17 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useContext } from "react";
 import { StyleSheet, View } from "react-native";
 import { useNavigation, useIsFocused } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
+
+import { markAsUnavailable } from "../services/Figurinhas";
+import { GlobalContext } from "../context/GlobalContext";
 
 import BackCamera from "../components/camera/BackCamera";
 import IconButton from "../components/button/IconButton";
 import PictureModal from "../components/card/PictureModal";
 
 function FigurinhasView() {
+  const { data, setData } = useContext(GlobalContext);
   const camRef = useRef(null);
   const navigation = useNavigation();
   const isFocused = useIsFocused();
@@ -19,7 +23,7 @@ function FigurinhasView() {
     navigation.navigate("Figurinhas");
   };
 
-  const takePicture = async (setData) => {
+  const takePicture = async (setNewData) => {
     if (camRef) {
       const data = await camRef.current.takePictureAsync();
       setPicture(data.uri);
@@ -45,8 +49,17 @@ function FigurinhasView() {
       })
         .then((response) => response.json())
         .then((json) => {
-          setData(json.faltando);
-          console.log(json);
+          if (json.faltando.length == 0) setNewData(json.faltando);
+          else setData(["Nada foi encontrado!!"]);
+          
+          const updated = data.map((fig) => {
+            for (let i = 0; i < json.faltando.length; i++)
+              if (fig.cod == json.faltando[i]) {
+                fig.hasSticker = 1;
+                break;
+              }
+          });
+          setData(updated);
         })
         .catch((err) => console.error("não conseguiu buscar no servidor"));
     }

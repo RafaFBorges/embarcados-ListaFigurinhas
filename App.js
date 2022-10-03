@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { StatusBar, StyleSheet, SafeAreaView } from "react-native";
 
+import { InfoProvider } from "./src/context/GlobalContext";
 import PermissionView from "./src/pages/PermissionView";
 import PrincipalRoute from "./src/routes/PrincipalRoute";
 
@@ -19,7 +20,9 @@ function App() {
       {hasPermission == null || hasPermission == false ? (
         <PermissionView setHasPermission={(value) => setHasPermission(value)} />
       ) : (
-        <PrincipalRoute />
+        <InfoProvider>
+          <PrincipalRoute />
+        </InfoProvider>
       )}
     </SafeAreaView>
   );
